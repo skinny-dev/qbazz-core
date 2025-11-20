@@ -1,19 +1,21 @@
 -- CreateTable
 CREATE TABLE "admins" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "telegramId" TEXT NOT NULL,
     "telegramAvatar" TEXT,
     "telegramName" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "role" TEXT NOT NULL DEFAULT 'MODERATOR',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "admins_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "telegramId" TEXT NOT NULL,
     "telegramAvatar" TEXT,
     "telegramUsername" TEXT,
@@ -22,13 +24,15 @@ CREATE TABLE "users" (
     "phoneNumber" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isBanned" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "categories" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "icon" TEXT,
@@ -39,14 +43,15 @@ CREATE TABLE "categories" (
     "metaTitle" TEXT,
     "metaDescription" TEXT,
     "metaKeywords" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    CONSTRAINT "categories_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "stores" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
@@ -58,7 +63,7 @@ CREATE TABLE "stores" (
     "coverImage" TEXT,
     "qrCode" TEXT,
     "isApproved" BOOLEAN NOT NULL DEFAULT false,
-    "approvedAt" DATETIME,
+    "approvedAt" TIMESTAMP(3),
     "approvedById" INTEGER,
     "rejectionReason" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
@@ -71,27 +76,27 @@ CREATE TABLE "stores" (
     "businessDetails" TEXT,
     "stats" TEXT,
     "settings" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "lastActiveAt" DATETIME,
-    CONSTRAINT "stores_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "stores_approvedById_fkey" FOREIGN KEY ("approvedById") REFERENCES "admins" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "lastActiveAt" TIMESTAMP(3),
+
+    CONSTRAINT "stores_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "store_categories" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "storeId" INTEGER NOT NULL,
     "categoryId" INTEGER NOT NULL,
     "isPrimary" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "store_categories_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "store_categories_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "store_categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "products" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "storeId" INTEGER NOT NULL,
     "categoryId" INTEGER,
     "title" TEXT NOT NULL,
@@ -123,25 +128,25 @@ CREATE TABLE "products" (
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "stats" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "publishedAt" DATETIME,
-    "deletedAt" DATETIME,
-    CONSTRAINT "products_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "publishedAt" TIMESTAMP(3),
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "products_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "store_actions" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "storeId" INTEGER NOT NULL,
     "adminId" INTEGER,
     "actionType" TEXT NOT NULL,
     "description" TEXT,
     "metadata" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "store_actions_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "store_actions_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "admins" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "store_actions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -236,3 +241,30 @@ CREATE INDEX "store_actions_actionType_idx" ON "store_actions"("actionType");
 
 -- CreateIndex
 CREATE INDEX "store_actions_createdAt_idx" ON "store_actions"("createdAt");
+
+-- AddForeignKey
+ALTER TABLE "categories" ADD CONSTRAINT "categories_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "stores" ADD CONSTRAINT "stores_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "stores" ADD CONSTRAINT "stores_approvedById_fkey" FOREIGN KEY ("approvedById") REFERENCES "admins"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "store_categories" ADD CONSTRAINT "store_categories_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "store_categories" ADD CONSTRAINT "store_categories_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "products_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "store_actions" ADD CONSTRAINT "store_actions_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "stores"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "store_actions" ADD CONSTRAINT "store_actions_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "admins"("id") ON DELETE SET NULL ON UPDATE CASCADE;
