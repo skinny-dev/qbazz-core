@@ -18,7 +18,7 @@ interface QRCodeStyle {
 export declare function generateStoreQRCode(storeData: {
     telegramId: string;
     slug?: string;
-}, customStyle?: Partial<QRCodeStyle>): Promise<{
+}, _customStyle?: Partial<QRCodeStyle>): Promise<{
     link: string;
     data: string;
 }>;

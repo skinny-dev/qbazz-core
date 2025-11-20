@@ -38,7 +38,7 @@ export async function generateStoreQRCode(
     telegramId: string;
     slug?: string;
   },
-  customStyle?: Partial<QRCodeStyle>
+  _customStyle?: Partial<QRCodeStyle> // Unused for now
 ): Promise<{ link: string; data: string }> {
   const baseUrl = process.env.QR_CODE_BASE_URL || 'https://qbazz.com';
   const link = `${baseUrl}/${storeData.telegramId}`;

@@ -27,7 +27,8 @@ const DEFAULT_QR_STYLE = {
  * @param customStyle - Optional custom QR code style
  * @returns QR code data URL and link
  */
-async function generateStoreQRCode(storeData, customStyle) {
+async function generateStoreQRCode(storeData, _customStyle // Unused for now
+) {
     const baseUrl = process.env.QR_CODE_BASE_URL || 'https://qbazz.com';
     const link = `${baseUrl}/${storeData.telegramId}`;
     // const style = { ...DEFAULT_QR_STYLE, ...customStyle }; // Disabled
