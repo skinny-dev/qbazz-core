@@ -1,0 +1,11 @@
+services:
+  - name: qbazz-api
+    type: web
+    runtime: docker
+    branch: main
+    healthCheckPath: /health
+    env:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
