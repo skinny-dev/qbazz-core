@@ -120,25 +120,50 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log('='.repeat(60));
-  console.log(`🚀 Qbazz Core API Server`);
-  console.log('='.repeat(60));
-  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 Server running on port: ${PORT}`);
-  console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
-  console.log(`💚 Health Check: http://localhost:${PORT}/health`);
-  console.log('='.repeat(60));
-  console.log('📚 Available Routes:');
-  console.log('  - POST   /api/users');
-  console.log('  - GET    /api/users/me');
-  console.log('  - GET    /api/categories');
-  console.log('  - POST   /api/stores');
-  console.log('  - GET    /api/stores');
-  console.log('  - POST   /api/stores/:id/approve (Admin)');
-  console.log('  - POST   /api/products');
-  console.log('  - GET    /api/products');
-  console.log('='.repeat(60));
+// Test database connection on startup
+import prisma from './config/database';
+
+prisma.$connect()
+  .then(() => {
+    console.log('✅ Database connected successfully');
+    
+    app.listen(PORT, () => {
+      console.log('='.repeat(60));
+      console.log(`🚀 Qbazz Core API Server`);
+      console.log('='.repeat(60));
+      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🌐 Server running on port: ${PORT}`);
+      console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
+      console.log(`💚 Health Check: http://localhost:${PORT}/health`);
+      console.log(`🗄️  Database: PostgreSQL`);
+      console.log('='.repeat(60));
+      console.log('📚 Available Routes:');
+      console.log('  - POST   /api/users');
+      console.log('  - GET    /api/users/me');
+      console.log('  - GET    /api/categories');
+      console.log('  - POST   /api/stores');
+      console.log('  - GET    /api/stores');
+      console.log('  - POST   /api/stores/:id/approve (Admin)');
+      console.log('  - POST   /api/products');
+      console.log('  - GET    /api/products');
+      console.log('='.repeat(60));
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Database connection failed:', error);
+    console.error('Please check your DATABASE_URL environment variable');
+    process.exit(1);
+  });
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
 });
 
 export default app;
