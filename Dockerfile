@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install ALL dependencies (need TypeScript to build)
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
