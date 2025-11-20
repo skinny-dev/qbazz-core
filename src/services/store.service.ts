@@ -1,7 +1,7 @@
 import prisma from '../config/database';
 import { NotFoundError, ConflictError } from '../utils/errors.util';
 import { generateSlug, getPaginationParams, getPaginationMeta } from '../utils/helpers.util';
-import { generateStoreQRCode } from '../utils/qrcode.util';
+// import { generateStoreQRCode } from '../utils/qrcode.util'; // Disabled for Node 19 compatibility
 import { CreateStoreInput, UpdateStoreInput } from '../validators';
 
 export class StoreService {
@@ -134,10 +134,8 @@ export class StoreService {
 
     // Generate QR Code after approval (use channel username if available, otherwise channel ID)
     const channelIdentifier = socials.telegram.username || socials.telegram.id;
-    const qrCode = await generateStoreQRCode({
-      telegramId: channelIdentifier,
-      slug: store.slug,
-    });
+    // QR code generation disabled for Node 19 compatibility
+    const qrCode = null;
 
     // Update store
     const updatedStore = await prisma.store.update({
@@ -146,7 +144,7 @@ export class StoreService {
         isApproved: true,
         approvedAt: new Date(),
         approvedById: adminId,
-        qrCode: JSON.stringify(qrCode),
+        qrCode: qrCode ? JSON.stringify(qrCode) : null,
       },
       include: {
         user: true,
