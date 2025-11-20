@@ -122,9 +122,6 @@ class StoreService {
             throw new errors_util_1.ConflictError('Store is already approved');
         }
         // Parse socials JSON string
-        const socials = JSON.parse(store.socials);
-        // Generate QR Code after approval (use channel username if available, otherwise channel ID)
-        const channelIdentifier = socials.telegram.username || socials.telegram.id;
         // QR code generation disabled for Node 19 compatibility
         const qrCode = null;
         // Update store

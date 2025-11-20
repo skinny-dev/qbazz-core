@@ -130,10 +130,6 @@ export class StoreService {
     }
 
     // Parse socials JSON string
-    const socials = JSON.parse(store.socials);
-
-    // Generate QR Code after approval (use channel username if available, otherwise channel ID)
-    const channelIdentifier = socials.telegram.username || socials.telegram.id;
     // QR code generation disabled for Node 19 compatibility
     const qrCode = null;
 
