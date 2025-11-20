@@ -99,7 +99,7 @@ app.use(error_middleware_1.notFoundHandler);
 // Global error handler
 app.use(error_middleware_1.errorHandler);
 // ==================== START SERVER ====================
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 // Test database connection on startup
 const database_1 = __importDefault(require("./config/database"));
 // Start server first, then test database

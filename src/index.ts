@@ -118,7 +118,7 @@ app.use(errorHandler);
 
 // ==================== START SERVER ====================
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Test database connection on startup
 import prisma from './config/database';
