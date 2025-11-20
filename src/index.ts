@@ -123,37 +123,42 @@ const PORT = process.env.PORT || 3000;
 // Test database connection on startup
 import prisma from './config/database';
 
-prisma.$connect()
-  .then(() => {
-    console.log('✅ Database connected successfully');
-    
-    app.listen(PORT, () => {
-      console.log('='.repeat(60));
-      console.log(`🚀 Qbazz Core API Server`);
-      console.log('='.repeat(60));
-      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🌐 Server running on port: ${PORT}`);
-      console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
-      console.log(`💚 Health Check: http://localhost:${PORT}/health`);
+// Start server first, then test database
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('='.repeat(60));
+  console.log(`🚀 Qbazz Core API Server`);
+  console.log('='.repeat(60));
+  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 Server running on port: ${PORT}`);
+  console.log(`🔗 API Base URL: http://0.0.0.0:${PORT}/api`);
+  console.log(`💚 Health Check: http://0.0.0.0:${PORT}/health`);
+  console.log('='.repeat(60));
+  
+  // Test database connection after server starts
+  prisma.$connect()
+    .then(() => {
+      console.log('✅ Database connected successfully');
       console.log(`🗄️  Database: PostgreSQL`);
-      console.log('='.repeat(60));
-      console.log('📚 Available Routes:');
-      console.log('  - POST   /api/users');
-      console.log('  - GET    /api/users/me');
-      console.log('  - GET    /api/categories');
-      console.log('  - POST   /api/stores');
-      console.log('  - GET    /api/stores');
-      console.log('  - POST   /api/stores/:id/approve (Admin)');
-      console.log('  - POST   /api/products');
-      console.log('  - GET    /api/products');
-      console.log('='.repeat(60));
+    })
+    .catch((error) => {
+      console.error('⚠️  Database connection failed:', error.message);
+      console.error('⚠️  API will run but database operations will fail');
+      console.error('⚠️  Please check your DATABASE_URL environment variable');
     });
-  })
-  .catch((error) => {
-    console.error('❌ Database connection failed:', error);
-    console.error('Please check your DATABASE_URL environment variable');
-    process.exit(1);
-  });
+  
+  console.log('='.repeat(60));
+  console.log('📚 Available Routes:');
+  console.log('  - GET    /health (no database required)');
+  console.log('  - POST   /api/users');
+  console.log('  - GET    /api/users/me');
+  console.log('  - GET    /api/categories');
+  console.log('  - POST   /api/stores');
+  console.log('  - GET    /api/stores');
+  console.log('  - POST   /api/stores/:id/approve (Admin)');
+  console.log('  - POST   /api/products');
+  console.log('  - GET    /api/products');
+  console.log('='.repeat(60));
+});
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
