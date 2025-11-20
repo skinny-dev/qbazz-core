@@ -5,7 +5,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Build output
-dist/
+# dist/ - committed for deployment
 build/
 
 # Environment variables
