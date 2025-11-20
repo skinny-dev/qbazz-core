@@ -24,15 +24,22 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install dependencies for sharp and other native modules
+RUN apk add --no-cache \
+    dumb-init \
+    python3 \
+    make \
+    g++ \
+    vips-dev
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install production dependencies only
-RUN npm ci --only=production && npm cache clean --force
+# Install production dependencies only and rebuild sharp for Alpine
+RUN npm ci --only=production && \
+    npm rebuild sharp --platform=linuxmusl --arch=x64 && \
+    npm cache clean --force
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
