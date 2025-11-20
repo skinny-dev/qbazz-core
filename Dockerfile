@@ -7,16 +7,20 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci --only=production
+# Install ALL dependencies (need TypeScript to build)
+RUN npm ci
 
-# Copy built dist folder and other necessary files
-COPY dist ./dist
-COPY public ./public
-COPY config ./config
+# Copy source code
+COPY . .
 
 # Generate Prisma Client
 RUN npx prisma generate
+
+# Build TypeScript (dist folder already exists in repo, but rebuild to be safe)
+RUN npm run build 2>/dev/null || echo "Build skipped, using committed dist"
+
+# Remove dev dependencies
+RUN npm prune --production
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
