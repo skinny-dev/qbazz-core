@@ -1,4 +1,4 @@
-import { generateQRCode } from 'styled-qr-code-node';
+import QRCode from 'qrcode';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -46,29 +46,14 @@ export async function generateStoreQRCode(
   const style = { ...DEFAULT_QR_STYLE, ...customStyle };
 
   try {
-    // Generate QR code with styled-qr-code-node
-    const qrBuffer = await generateQRCode({
-      data: link,
-      width: style.width,
-      height: style.width,
+    // Generate simple QR code without logo (qrcode library works on all Node versions)
+    const qrDataURL = await QRCode.toDataURL(link, {
+      errorCorrectionLevel: style.errorCorrectionLevel,
       margin: style.margin,
-      dotsOptions: {
-        color: style.color.dark,
-        type: 'rounded',
-      },
-      backgroundOptions: {
-        color: style.color.light,
-      },
-      cornersSquareOptions: {
-        type: 'extra-rounded',
-      },
-      cornersDotOptions: {
-        type: 'dot',
-      },
+      width: style.width,
+      color: style.color,
+      type: 'image/png',
     });
-
-    // Convert to data URL
-    const qrDataURL = `data:image/png;base64,${qrBuffer.toString('base64')}`;
 
     return {
       link,

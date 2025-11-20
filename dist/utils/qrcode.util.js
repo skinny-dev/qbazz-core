@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateStoreQRCode = generateStoreQRCode;
 exports.saveQRCodeToFile = saveQRCodeToFile;
 exports.loadQRCodeStyle = loadQRCodeStyle;
-const styled_qr_code_node_1 = require("styled-qr-code-node");
+const qrcode_1 = __importDefault(require("qrcode"));
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 // Default Qbazz QR Code Style
@@ -32,28 +32,14 @@ async function generateStoreQRCode(storeData, customStyle) {
     const link = `${baseUrl}/${storeData.telegramId}`;
     const style = { ...DEFAULT_QR_STYLE, ...customStyle };
     try {
-        // Generate QR code with styled-qr-code-node
-        const qrBuffer = await (0, styled_qr_code_node_1.generateQRCode)({
-            data: link,
-            width: style.width,
-            height: style.width,
+        // Generate simple QR code without logo (qrcode library works on all Node versions)
+        const qrDataURL = await qrcode_1.default.toDataURL(link, {
+            errorCorrectionLevel: style.errorCorrectionLevel,
             margin: style.margin,
-            dotsOptions: {
-                color: style.color.dark,
-                type: 'rounded',
-            },
-            backgroundOptions: {
-                color: style.color.light,
-            },
-            cornersSquareOptions: {
-                type: 'extra-rounded',
-            },
-            cornersDotOptions: {
-                type: 'dot',
-            },
+            width: style.width,
+            color: style.color,
+            type: 'image/png',
         });
-        // Convert to data URL
-        const qrDataURL = `data:image/png;base64,${qrBuffer.toString('base64')}`;
         return {
             link,
             data: qrDataURL,
