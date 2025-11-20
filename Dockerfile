@@ -1,26 +1,5 @@
-# Build stage
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY prisma ./prisma/
-
-# Install all dependencies (including dev dependencies for build)
-RUN npm ci
-
-# Copy source code
-COPY . .
-
-# Generate Prisma Client
-RUN npx prisma generate
-
-# Build TypeScript
-RUN npm run build
-
-# Production stage
-FROM node:20-alpine AS production
+# Use Node.js 20 Alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -36,16 +15,22 @@ RUN apk add --no-cache \
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install production dependencies only and rebuild sharp for Alpine
-RUN npm ci --only=production && \
-    npm rebuild sharp --platform=linuxmusl --arch=x64 && \
+# Install ALL dependencies (needed for TypeScript build)
+RUN npm ci && \
     npm cache clean --force
 
-# Copy built files from builder
-COPY --from=builder /app/dist ./dist
+# Copy source code
+COPY . .
 
-# Generate Prisma Client in production
+# Generate Prisma Client
 RUN npx prisma generate
+
+# Build TypeScript
+RUN npm run build
+
+# Remove dev dependencies after build
+RUN npm prune --production && \
+    npm rebuild sharp --platform=linuxmusl --arch=x64
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
