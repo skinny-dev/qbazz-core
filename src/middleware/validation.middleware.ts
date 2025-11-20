@@ -6,7 +6,7 @@ import { sendValidationError } from '../utils/response.util';
  * Zod validation middleware factory
  */
 export const validate = (schema: AnyZodObject) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       await schema.parseAsync({
         body: req.body,
@@ -20,7 +20,8 @@ export const validate = (schema: AnyZodObject) => {
           field: err.path.join('.'),
           message: err.message,
         }));
-        return sendValidationError(res, errors);
+        sendValidationError(res, errors);
+        return;
       }
       next(error);
     }
@@ -31,7 +32,7 @@ export const validate = (schema: AnyZodObject) => {
  * Validate request body only
  */
 export const validateBody = (schema: AnyZodObject) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       req.body = await schema.parseAsync(req.body);
       next();
@@ -41,7 +42,8 @@ export const validateBody = (schema: AnyZodObject) => {
           field: err.path.join('.'),
           message: err.message,
         }));
-        return sendValidationError(res, errors);
+        sendValidationError(res, errors);
+        return;
       }
       next(error);
     }
@@ -52,7 +54,7 @@ export const validateBody = (schema: AnyZodObject) => {
  * Validate query parameters
  */
 export const validateQuery = (schema: AnyZodObject) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       req.query = await schema.parseAsync(req.query);
       next();
@@ -62,7 +64,8 @@ export const validateQuery = (schema: AnyZodObject) => {
           field: err.path.join('.'),
           message: err.message,
         }));
-        return sendValidationError(res, errors);
+        sendValidationError(res, errors);
+        return;
       }
       next(error);
     }
