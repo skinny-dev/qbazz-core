@@ -1,4 +1,4 @@
-// import QRCode from 'qrcode'; // Disabled for Node 19 compatibility
+import QRCode from 'qrcode';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -43,12 +43,17 @@ export async function generateStoreQRCode(
   const baseUrl = process.env.QR_CODE_BASE_URL || 'https://qbazz.com';
   const link = `${baseUrl}/${storeData.telegramId}`;
 
-  // const style = { ...DEFAULT_QR_STYLE, ...customStyle }; // Disabled
+  const style = { ...DEFAULT_QR_STYLE, ..._customStyle };
 
   try {
-    // QR code generation disabled for Node 19 compatibility
-    // TODO: Re-enable when upgraded to Node 20+
-    const qrDataURL = ''; // Placeholder
+    // Generate QR code with qrcode library (works with Node 19)
+    const qrDataURL = await QRCode.toDataURL(link, {
+      errorCorrectionLevel: style.errorCorrectionLevel,
+      margin: style.margin,
+      width: style.width,
+      color: style.color,
+      type: 'image/png',
+    });
 
     return {
       link,

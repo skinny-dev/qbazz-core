@@ -7,6 +7,7 @@ exports.StoreService = void 0;
 const database_1 = __importDefault(require("../config/database"));
 const errors_util_1 = require("../utils/errors.util");
 const helpers_util_1 = require("../utils/helpers.util");
+const qrcode_util_1 = require("../utils/qrcode.util");
 class StoreService {
     /**
      * Create a new store
@@ -122,8 +123,13 @@ class StoreService {
             throw new errors_util_1.ConflictError('Store is already approved');
         }
         // Parse socials JSON string
-        // QR code generation disabled for Node 19 compatibility
-        const qrCode = null;
+        // Generate QR Code after approval
+        const socials = JSON.parse(store.socials);
+        const channelIdentifier = socials.telegram.username || socials.telegram.id;
+        const qrCode = await (0, qrcode_util_1.generateStoreQRCode)({
+            telegramId: channelIdentifier,
+            slug: store.slug,
+        });
         // Update store
         const updatedStore = await database_1.default.store.update({
             where: { id: storeId },
@@ -131,7 +137,7 @@ class StoreService {
                 isApproved: true,
                 approvedAt: new Date(),
                 approvedById: adminId,
-                qrCode: qrCode ? JSON.stringify(qrCode) : null,
+                qrCode: JSON.stringify(qrCode),
             },
             include: {
                 user: true,
