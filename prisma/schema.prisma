@@ -1,0 +1,283 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ==================== ADMIN MODEL ====================
+model Admin {
+  id             Int      @id @default(autoincrement())
+  phoneNumber    String   @unique
+  telegramId     String   @unique
+  telegramAvatar String?
+  telegramName   String
+  isActive       Boolean  @default(true)
+  role           String   @default("MODERATOR") // SUPER_ADMIN, ADMIN, MODERATOR
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  approvedStores Store[]       @relation("ApprovedBy")
+  storeActions   StoreAction[]
+
+  @@index([telegramId])
+  @@index([phoneNumber])
+  @@map("admins")
+}
+
+// ==================== USER MODEL ====================
+model User {
+  id               Int      @id @default(autoincrement())
+  telegramId       String   @unique
+  telegramAvatar   String?
+  telegramUsername String?
+  firstName        String?
+  lastName         String?
+  phoneNumber      String?
+  isActive         Boolean  @default(true)
+  isBanned         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  stores Store[]
+
+  @@index([telegramId])
+  @@index([phoneNumber])
+  @@map("users")
+}
+
+// ==================== CATEGORY MODEL ====================
+model Category {
+  id          Int     @id @default(autoincrement())
+  title       String
+  slug        String  @unique
+  icon        String?
+  description String?
+  parentId    Int?
+  isActive    Boolean @default(true)
+  sortOrder   Int     @default(0)
+
+  // SEO Fields
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Self-relation for subcategories
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children Category[] @relation("CategoryHierarchy")
+
+  // Relations
+  storeCategories StoreCategory[]
+  products        Product[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([isActive])
+  @@map("categories")
+}
+
+// ==================== STORE MODEL ====================
+model Store {
+  id Int @id @default(autoincrement())
+
+  // Owner & Telegram Info
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic Information
+  title           String
+  slug            String  @unique
+  description     String?
+  longDescription String?
+
+  // Socials (JSON)
+  socials String // JSON string: { telegram: { id, avatar, bio, username }, instagram, whatsapp, etc. }
+
+  // Identity (JSON)
+  identity String // JSON string: { nationalCode, location: { city, country, coordinates }, address, phones: [] }
+
+  // Media
+  avatar     String?
+  coverImage String?
+
+  // QR Code
+  qrCode String? // JSON string: { link, data, createdAt }
+
+  // Approval Status
+  isApproved      Boolean   @default(false)
+  approvedAt      DateTime?
+  approvedById    Int?
+  approvedBy      Admin?    @relation("ApprovedBy", fields: [approvedById], references: [id])
+  rejectionReason String?
+
+  // Status
+  isActive   Boolean @default(true)
+  isFeatured Boolean @default(false)
+
+  // Tags
+  tags String // JSON array
+
+  // SEO Fields
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String // JSON array
+
+  // GEO Fields (JSON)
+  geoData String? // JSON string: { country, city, coordinates: { lat, lng }, timezone, language }
+
+  // Business Details (JSON)
+  businessDetails String? // JSON string: { type, license, established, workingHours, deliveryZones }
+
+  // Statistics (JSON)
+  stats String? // JSON string: { views, clicks, products, orders, rating, reviews }
+
+  // Settings (JSON)
+  settings String? // JSON string: { autoPublish, allowReviews, showContact, languages }
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastActiveAt DateTime?
+
+  // Relations
+  storeCategories StoreCategory[]
+  products        Product[]
+  storeActions    StoreAction[]
+
+  @@index([slug])
+  @@index([userId])
+  @@index([isApproved])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("stores")
+}
+
+// ==================== STORE CATEGORY (Many-to-Many) ====================
+model StoreCategory {
+  id         Int     @id @default(autoincrement())
+  storeId    Int
+  categoryId Int
+  isPrimary  Boolean @default(false)
+
+  store    Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([storeId, categoryId])
+  @@index([storeId])
+  @@index([categoryId])
+  @@map("store_categories")
+}
+
+// ==================== PRODUCT MODEL ====================
+model Product {
+  id Int @id @default(autoincrement())
+
+  // Store Relation
+  storeId Int
+  store   Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  // Category Relation
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Basic Information (from Telegram Bot extraction)
+  title           String
+  slug            String  @unique
+  description     String?
+  longDescription String?
+
+  // Product Properties (JSON)
+  properties String // JSON string: { material, sizes, dimensions, weight, pattern, style, target_audience, gender, season, care_instructions }
+
+  // Pricing (JSON)
+  pricing String // JSON string: { base_price, currency, price_variations, discount, wholesale_price, unit }
+
+  // Colors & Variations (JSON)
+  colors          String // JSON array
+  colorVariations String? // JSON string: [{ color_name, color_code, description, stock }]
+
+  // Availability
+  availability  String // "available", "out_of_stock", "pre_order"
+  stockQuantity Int?
+
+  // Additional Info
+  brand        String?
+  manufacturer String?
+  condition    String? // "new", "used", "refurbished"
+  madeIn       String?
+  qualityGrade String?
+  occasion     String?
+
+  // Features & Benefits
+  features String // JSON array
+  benefits String // JSON array
+
+  // Tags
+  tags String // JSON array
+
+  // SEO Fields
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String // JSON array
+
+  // Images Analysis (JSON)
+  imagesAnalysis String? // JSON string: { total_images, main_colors_seen, visual_details, design_elements }
+
+  // Media
+  images String // JSON array of image URLs
+
+  // Source Metadata (JSON - from Telegram)
+  sourceMetadata String? // JSON string: { extracted_at, message_id, message_ids, channel_id, channel_name, has_image, image_count, original_caption }
+
+  // Status
+  isPublished Boolean @default(false)
+  isFeatured  Boolean @default(false)
+  isDeleted   Boolean @default(false)
+
+  // Statistics (JSON)
+  stats String? // JSON string: { views, clicks, likes, shares }
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime?
+  deletedAt   DateTime?
+
+  @@index([slug])
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([isPublished])
+  @@index([isFeatured])
+  @@index([createdAt])
+  @@map("products")
+}
+
+// ==================== STORE ACTION (Audit Log) ====================
+model StoreAction {
+  id          Int      @id @default(autoincrement())
+  storeId     Int
+  adminId     Int?
+  actionType  String // CREATED, APPROVED, REJECTED, UPDATED, DELETED, SUSPENDED, REACTIVATED
+  description String?
+  metadata    String? // JSON string: Additional data about the action
+  createdAt   DateTime @default(now())
+
+  store Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  admin Admin? @relation(fields: [adminId], references: [id])
+
+  @@index([storeId])
+  @@index([adminId])
+  @@index([actionType])
+  @@index([createdAt])
+  @@map("store_actions")
+}
