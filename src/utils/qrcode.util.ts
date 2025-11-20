@@ -1,7 +1,6 @@
-import QRCode from 'qrcode';
+import { generateQRCode } from 'styled-qr-code-node';
 import fs from 'fs/promises';
 import path from 'path';
-import sharp from 'sharp';
 
 interface QRCodeStyle {
   errorCorrectionLevel: 'L' | 'M' | 'Q' | 'H';
@@ -47,45 +46,29 @@ export async function generateStoreQRCode(
   const style = { ...DEFAULT_QR_STYLE, ...customStyle };
 
   try {
-    // Generate QR code as buffer
-    const qrBuffer = await QRCode.toBuffer(link, {
-      errorCorrectionLevel: style.errorCorrectionLevel,
-      margin: style.margin,
+    // Generate QR code with styled-qr-code-node
+    const qrBuffer = await generateQRCode({
+      data: link,
       width: style.width,
-      color: style.color,
-      type: 'png',
+      height: style.width,
+      margin: style.margin,
+      dotsOptions: {
+        color: style.color.dark,
+        type: 'rounded',
+      },
+      backgroundOptions: {
+        color: style.color.light,
+      },
+      cornersSquareOptions: {
+        type: 'extra-rounded',
+      },
+      cornersDotOptions: {
+        type: 'dot',
+      },
     });
 
-    // Load logo
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png');
-    
-    // Calculate logo size (25% of QR code size)
-    const logoSize = Math.floor(style.width * 0.25);
-    
-    // Resize logo
-    const resizedLogo = await sharp(logoPath)
-      .resize(logoSize, logoSize, {
-        fit: 'contain',
-        background: { r: 255, g: 255, b: 255, alpha: 1 }
-      })
-      .png()
-      .toBuffer();
-    
-    // Calculate position to center the logo
-    const position = Math.floor((style.width - logoSize) / 2);
-    
-    // Composite logo onto QR code
-    const qrWithLogo = await sharp(qrBuffer)
-      .composite([{
-        input: resizedLogo,
-        top: position,
-        left: position,
-      }])
-      .png()
-      .toBuffer();
-    
     // Convert to data URL
-    const qrDataURL = `data:image/png;base64,${qrWithLogo.toString('base64')}`;
+    const qrDataURL = `data:image/png;base64,${qrBuffer.toString('base64')}`;
 
     return {
       link,

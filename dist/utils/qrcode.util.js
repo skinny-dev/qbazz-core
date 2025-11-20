@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateStoreQRCode = generateStoreQRCode;
 exports.saveQRCodeToFile = saveQRCodeToFile;
 exports.loadQRCodeStyle = loadQRCodeStyle;
-const qrcode_1 = __importDefault(require("qrcode"));
+const styled_qr_code_node_1 = require("styled-qr-code-node");
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
-const sharp_1 = __importDefault(require("sharp"));
 // Default Qbazz QR Code Style
 const DEFAULT_QR_STYLE = {
     errorCorrectionLevel: 'H',
@@ -33,39 +32,28 @@ async function generateStoreQRCode(storeData, customStyle) {
     const link = `${baseUrl}/${storeData.telegramId}`;
     const style = { ...DEFAULT_QR_STYLE, ...customStyle };
     try {
-        // Generate QR code as buffer
-        const qrBuffer = await qrcode_1.default.toBuffer(link, {
-            errorCorrectionLevel: style.errorCorrectionLevel,
-            margin: style.margin,
+        // Generate QR code with styled-qr-code-node
+        const qrBuffer = await (0, styled_qr_code_node_1.generateQRCode)({
+            data: link,
             width: style.width,
-            color: style.color,
-            type: 'png',
+            height: style.width,
+            margin: style.margin,
+            dotsOptions: {
+                color: style.color.dark,
+                type: 'rounded',
+            },
+            backgroundOptions: {
+                color: style.color.light,
+            },
+            cornersSquareOptions: {
+                type: 'extra-rounded',
+            },
+            cornersDotOptions: {
+                type: 'dot',
+            },
         });
-        // Load logo
-        const logoPath = path_1.default.join(process.cwd(), 'public', 'logo.png');
-        // Calculate logo size (25% of QR code size)
-        const logoSize = Math.floor(style.width * 0.25);
-        // Resize logo
-        const resizedLogo = await (0, sharp_1.default)(logoPath)
-            .resize(logoSize, logoSize, {
-            fit: 'contain',
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-        })
-            .png()
-            .toBuffer();
-        // Calculate position to center the logo
-        const position = Math.floor((style.width - logoSize) / 2);
-        // Composite logo onto QR code
-        const qrWithLogo = await (0, sharp_1.default)(qrBuffer)
-            .composite([{
-                input: resizedLogo,
-                top: position,
-                left: position,
-            }])
-            .png()
-            .toBuffer();
         // Convert to data URL
-        const qrDataURL = `data:image/png;base64,${qrWithLogo.toString('base64')}`;
+        const qrDataURL = `data:image/png;base64,${qrBuffer.toString('base64')}`;
         return {
             link,
             data: qrDataURL,
