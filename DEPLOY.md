@@ -3,6 +3,7 @@
 ## 🚀 Quick Deploy with Docker
 
 ### Prerequisites
+
 - Docker and Docker Compose installed
 - PostgreSQL database (can be cloud-hosted)
 - Telegram Bot Token
@@ -142,21 +143,25 @@ flyctl deploy
 ### PostgreSQL Cloud Providers
 
 **Railway**
+
 ```
 DATABASE_URL="postgresql://user:pass@containers-us-west-xxx.railway.app:port/railway"
 ```
 
 **Supabase**
+
 ```
 DATABASE_URL="postgresql://postgres:pass@db.xxx.supabase.co:5432/postgres"
 ```
 
 **Neon**
+
 ```
 DATABASE_URL="postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb"
 ```
 
 **ElephantSQL**
+
 ```
 DATABASE_URL="postgres://user:pass@castor.db.elephantsql.com/xxx"
 ```
@@ -199,10 +204,12 @@ curl http://localhost:3000/health
 Update `src/index.ts` to configure allowed origins:
 
 ```typescript
-app.use(cors({
-  origin: ['https://your-frontend.com', 'https://www.your-frontend.com'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: ['https://your-frontend.com', 'https://www.your-frontend.com'],
+    credentials: true,
+  })
+);
 ```
 
 ### Rate Limiting
@@ -304,6 +311,7 @@ docker-compose up --build -d
 ## 📞 Support
 
 For issues and questions:
+
 - GitHub Issues: [github.com/skinny-dev/qbazz-core/issues](https://github.com/skinny-dev/qbazz-core/issues)
 - Documentation: See `README.md` and `SETUP.md`
 

@@ -9,7 +9,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Import middleware
-import { rateLimiter, antiScraping, isAdmin, isAuthenticated, optionalAuth } from './middleware/auth.middleware';
+import {
+  rateLimiter,
+  antiScraping,
+  isAdmin,
+  isAuthenticated,
+  optionalAuth,
+} from './middleware/auth.middleware';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 // Import controllers
@@ -28,10 +34,12 @@ app.use(helmet());
 
 // CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }));
@@ -133,9 +141,10 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔗 API Base URL: http://0.0.0.0:${PORT}/api`);
   console.log(`💚 Health Check: http://0.0.0.0:${PORT}/health`);
   console.log('='.repeat(60));
-  
+
   // Test database connection after server starts
-  prisma.$connect()
+  prisma
+    .$connect()
     .then(() => {
       console.log('✅ Database connected successfully');
       console.log(`🗄️  Database: PostgreSQL`);
@@ -145,7 +154,7 @@ app.listen(PORT, '0.0.0.0', () => {
       console.error('⚠️  API will run but database operations will fail');
       console.error('⚠️  Please check your DATABASE_URL environment variable');
     });
-  
+
   console.log('='.repeat(60));
   console.log('📚 Available Routes:');
   console.log('  - GET    /health (no database required)');

@@ -65,10 +65,12 @@ export class ProductService {
     });
 
     // Update store product count
-    const currentStats = store.stats 
-      ? (typeof store.stats === 'string' ? JSON.parse(store.stats) : store.stats)
+    const currentStats = store.stats
+      ? typeof store.stats === 'string'
+        ? JSON.parse(store.stats)
+        : store.stats
       : { views: 0, clicks: 0, products: 0, orders: 0 };
-    
+
     await prisma.store.update({
       where: { id: data.storeId },
       data: {

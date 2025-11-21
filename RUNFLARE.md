@@ -9,25 +9,31 @@
 ## Recommended Database Providers
 
 ### Neon (Free Tier Available)
+
 ```
 DATABASE_URL="postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb"
 ```
+
 - Free tier: 0.5GB storage
 - Serverless, auto-scaling
 - Sign up: [neon.tech](https://neon.tech)
 
 ### Supabase (Free Tier Available)
+
 ```
 DATABASE_URL="postgresql://postgres:pass@db.xxx.supabase.co:5432/postgres"
 ```
+
 - Free tier: 500MB storage
 - Includes admin dashboard
 - Sign up: [supabase.com](https://supabase.com)
 
 ### Railway (Free Tier Available)
+
 ```
 DATABASE_URL="postgresql://user:pass@containers-us-west-xxx.railway.app:port/railway"
 ```
+
 - $5 free credit monthly
 - Easy setup
 - Sign up: [railway.app](https://railway.app)
@@ -58,6 +64,7 @@ RATE_LIMIT_MAX_REQUESTS=1000
 ### 3. Deploy
 
 Runflare will automatically:
+
 1. Clone the repository
 2. Build the Docker image
 3. Run database migrations
@@ -67,6 +74,7 @@ Runflare will automatically:
 ### 4. Verify Deployment
 
 Check these endpoints:
+
 ```bash
 # Health check
 curl https://your-api-domain.com/health
@@ -80,17 +88,17 @@ curl https://your-api-domain.com/
 
 ## Environment Variables Reference
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `DATABASE_URL` | ✅ Yes | PostgreSQL connection string | `postgresql://user:pass@host:5432/db` |
-| `TELEGRAM_BOT_TOKEN` | ✅ Yes | Bot token from BotFather | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz` |
-| `JWT_SECRET` | ✅ Yes | Secret for JWT tokens (32+ chars) | `your_secure_random_string_here` |
-| `NODE_ENV` | ✅ Yes | Environment mode | `production` |
-| `PORT` | ✅ Yes | Server port | `3000` |
-| `TELEGRAM_BOT_URL` | ⚠️ Optional | Telegram bot webhook URL | `https://bot.example.com` |
-| `ALLOWED_ORIGINS` | ⚠️ Optional | CORS allowed origins | `https://qbazz.com` |
-| `QR_CODE_BASE_URL` | ⚠️ Optional | Base URL for QR codes | `https://qbazz.com` |
-| `RATE_LIMIT_MAX_REQUESTS` | ⚠️ Optional | Rate limit per window | `1000` |
+| Variable                  | Required    | Description                       | Example                                 |
+| ------------------------- | ----------- | --------------------------------- | --------------------------------------- |
+| `DATABASE_URL`            | ✅ Yes      | PostgreSQL connection string      | `postgresql://user:pass@host:5432/db`   |
+| `TELEGRAM_BOT_TOKEN`      | ✅ Yes      | Bot token from BotFather          | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz` |
+| `JWT_SECRET`              | ✅ Yes      | Secret for JWT tokens (32+ chars) | `your_secure_random_string_here`        |
+| `NODE_ENV`                | ✅ Yes      | Environment mode                  | `production`                            |
+| `PORT`                    | ✅ Yes      | Server port                       | `3000`                                  |
+| `TELEGRAM_BOT_URL`        | ⚠️ Optional | Telegram bot webhook URL          | `https://bot.example.com`               |
+| `ALLOWED_ORIGINS`         | ⚠️ Optional | CORS allowed origins              | `https://qbazz.com`                     |
+| `QR_CODE_BASE_URL`        | ⚠️ Optional | Base URL for QR codes             | `https://qbazz.com`                     |
+| `RATE_LIMIT_MAX_REQUESTS` | ⚠️ Optional | Rate limit per window             | `1000`                                  |
 
 ## Troubleshooting
 
@@ -99,6 +107,7 @@ curl https://your-api-domain.com/
 **Issue**: Docker build errors
 
 **Solution**: Check that:
+
 - `package.json` has all dependencies
 - `Dockerfile` syntax is correct
 - `.dockerignore` exists
@@ -108,6 +117,7 @@ curl https://your-api-domain.com/
 **Issue**: Cannot connect to database
 
 **Solution**:
+
 1. Verify `DATABASE_URL` is correct
 2. Check database is running
 3. Ensure IP whitelist includes Runflare IPs
@@ -121,6 +131,7 @@ curl https://your-api-domain.com/
 **Issue**: Database migrations error on startup
 
 **Solution**:
+
 1. Check database is empty/fresh
 2. Run migrations manually:
    ```bash
@@ -133,6 +144,7 @@ curl https://your-api-domain.com/
 **Issue**: Runflare marks service as unhealthy
 
 **Solution**:
+
 1. Ensure `/health` endpoint returns 200
 2. Check application is listening on `PORT` env var
 3. Verify no crashes in logs
@@ -142,6 +154,7 @@ curl https://your-api-domain.com/
 **Issue**: Frontend cannot access API
 
 **Solution**: Add frontend domain to `ALLOWED_ORIGINS`:
+
 ```
 ALLOWED_ORIGINS=https://your-frontend.com,https://www.your-frontend.com
 ```
@@ -158,6 +171,7 @@ npx prisma db seed
 ```
 
 Or use Prisma Studio to manually add data:
+
 ```bash
 npx prisma studio
 ```
@@ -165,6 +179,7 @@ npx prisma studio
 ### Monitor Logs
 
 Check Runflare dashboard for:
+
 - Application logs
 - Health check status
 - Resource usage

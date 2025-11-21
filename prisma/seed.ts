@@ -11,7 +11,7 @@ async function main() {
 
   // Create Root Categories
   console.log('Creating root categories...');
-  
+
   const womensFashion = await prisma.category.create({
     data: {
       title: 'پوشاک زنانه',
@@ -211,7 +211,14 @@ async function main() {
       icon: '👖',
       parentId: mensFashion.id,
       description: 'جین، کتان، اسپرت، پارچه‌ای',
-      metaKeywords: JSON.stringify(['شلوار', 'جین', 'کتان', 'شلوار اسپرت', 'شلوار پارچه ای', 'مردانه']),
+      metaKeywords: JSON.stringify([
+        'شلوار',
+        'جین',
+        'کتان',
+        'شلوار اسپرت',
+        'شلوار پارچه ای',
+        'مردانه',
+      ]),
       isActive: true,
       sortOrder: 2,
     },
@@ -498,7 +505,7 @@ async function main() {
 
   // Create Sample Admin
   console.log('Creating sample admin...');
-  
+
   // Create your actual admin account
   await prisma.admin.upsert({
     where: { telegramId: '7786012860' },
@@ -528,7 +535,7 @@ async function main() {
 
   // Create Sample User
   console.log('Creating sample user...');
-  
+
   await prisma.user.upsert({
     where: { telegramId: '987654321' },
     update: {},

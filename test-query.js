@@ -8,11 +8,11 @@ async function main() {
       title: true,
       isApproved: true,
       socials: true,
-    }
+    },
   });
-  
+
   console.log('Stores:', JSON.stringify(stores, null, 2));
-  
+
   await prisma.$disconnect();
 }
 

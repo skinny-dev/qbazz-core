@@ -127,7 +127,11 @@ Your store information has been successfully updated.
   /**
    * Notify store owner about store deletion
    */
-  async notifyStoreDeletion(storeData: { ownerTelegramId: string; title: string; reason?: string }) {
+  async notifyStoreDeletion(storeData: {
+    ownerTelegramId: string;
+    title: string;
+    reason?: string;
+  }) {
     const message = `
 🗑️ **Store Deleted**
 

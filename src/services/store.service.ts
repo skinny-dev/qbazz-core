@@ -31,7 +31,7 @@ export class StoreService {
     // Check if telegram channel ID is already used (simplified for SQLite)
     // Note: Full JSON query not available in SQLite, would need custom validation
     const allStores = await prisma.store.findMany();
-    const existingTelegramStore = allStores.find(s => {
+    const existingTelegramStore = allStores.find((s) => {
       try {
         const socials = JSON.parse(s.socials);
         return socials?.telegram?.id === data.socials.telegram.id;

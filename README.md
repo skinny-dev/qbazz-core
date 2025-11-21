@@ -18,7 +18,7 @@
 ✅ **SEO Optimized** - Meta tags, keywords, descriptions for all entities  
 ✅ **Iranian Validation** - National code validation, Persian text support  
 ✅ **Anti-Scraping** - Rate limiting and bot detection  
-✅ **Comprehensive API** - RESTful endpoints with pagination and filtering  
+✅ **Comprehensive API** - RESTful endpoints with pagination and filtering
 
 ## Tech Stack
 
@@ -68,6 +68,7 @@ npm run prisma:studio
 ## API Endpoints
 
 ### Users
+
 - `POST /api/users` - Create/update user
 - `GET /api/users/me` - Get current user (auth required)
 - `GET /api/users/:id` - Get user by ID
@@ -76,6 +77,7 @@ npm run prisma:studio
 - `POST /api/users/:id/unban` - Unban user (admin)
 
 ### Categories
+
 - `GET /api/categories` - List all categories
 - `GET /api/categories/root` - Get root categories
 - `GET /api/categories/tree` - Get category tree
@@ -85,6 +87,7 @@ npm run prisma:studio
 - `DELETE /api/categories/:id` - Delete category (admin)
 
 ### Stores
+
 - `GET /api/stores` - List stores (with pagination & filters)
 - `GET /api/stores/pending` - Get pending stores (admin)
 - `GET /api/stores/:id` - Get store by ID
@@ -96,6 +99,7 @@ npm run prisma:studio
 - `POST /api/stores/:id/reject` - Reject store (admin)
 
 ### Products
+
 - `GET /api/products` - List products (with filters)
 - `GET /api/products/search?q=query` - Search products
 - `GET /api/products/:id` - Get product by ID
@@ -120,6 +124,7 @@ For admin endpoints, the Telegram ID must belong to an admin user in the databas
 ## Example Requests
 
 ### Create Store
+
 ```bash
 curl -X POST http://localhost:3000/api/stores \
   -H "Content-Type: application/json" \
@@ -145,12 +150,14 @@ curl -X POST http://localhost:3000/api/stores \
 ```
 
 ### Approve Store (Admin)
+
 ```bash
 curl -X POST http://localhost:3000/api/stores/1/approve \
   -H "X-Telegram-Id: <admin_telegram_id>"
 ```
 
 ### List Products
+
 ```bash
 curl "http://localhost:3000/api/products?page=1&limit=10&isPublished=true&categoryId=1"
 ```
@@ -210,12 +217,14 @@ qbazz-core/
 ## Telegram Bot Integration
 
 The API communicates with the Telegram bot for:
+
 - Notifying admins about new store submissions
 - Sending approval/rejection notifications to store owners
 - Receiving product data extractions
 - Sending store updates
 
 Bot endpoints (on bot server):
+
 - `POST /api/send-message` - Send message to user
 - `POST /api/notify-admins` - Notify admins with inline buttons
 - `POST /api/store-created` - Receive store creation confirmation
