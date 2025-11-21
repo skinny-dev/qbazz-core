@@ -1,12 +1,13 @@
 #!/bin/sh
+set +e
 
 echo "================================"
-echo "Starting Qbazz Core API"
+echo "Qbazz Core API Starting"
+echo "================================"
+echo "NODE_ENV: ${NODE_ENV}"
+echo "PORT: ${PORT}"
+echo "DATABASE_URL: ${DATABASE_URL:0:50}..."
 echo "================================"
 
-echo "Environment: ${NODE_ENV}"
-echo "Port: ${PORT}"
-
-echo ""
-echo "Starting Server..."
-node dist/index.js
+# Start server
+exec node dist/index.js

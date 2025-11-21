@@ -113,7 +113,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`💚 Health Check: http://0.0.0.0:${PORT}/health`);
     console.log('='.repeat(60));
     // Test database connection after server starts
-    database_1.default.$connect()
+    database_1.default
+        .$connect()
         .then(() => {
         console.log('✅ Database connected successfully');
         console.log(`🗄️  Database: PostgreSQL`);
