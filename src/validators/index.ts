@@ -61,8 +61,8 @@ export function validateSlug(slug: string): boolean {
 // Store Creation Schema
 export const createStoreSchema = z.object({
   title: z.string().min(3).max(255),
-  description: z.string().min(10).max(1000).optional(),
-  longDescription: z.string().max(5000).optional(),
+  description: z.string().max(1000).optional().nullable(),
+  longDescription: z.string().max(5000).optional().nullable(),
   socials: z.object({
     telegram: z.object({
       id: z.string().refine(validateTelegramId, 'Invalid Telegram ID'),
