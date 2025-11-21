@@ -22,6 +22,9 @@ RUN npm run build 2>/dev/null || echo "Build skipped, using committed dist"
 # Remove dev dependencies
 RUN npm prune --production
 
+# Make start script executable
+RUN chmod +x start.sh
+
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001 && \
@@ -31,10 +34,6 @@ USER nodejs
 
 # Expose port
 EXPOSE 3000
-
-# Copy startup script
-COPY start.sh ./
-RUN chmod +x start.sh
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
