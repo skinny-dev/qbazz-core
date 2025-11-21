@@ -37,4 +37,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # Run migrations and start
-CMD ["sh", "-c", "npx prisma db execute --stdin <<< \"DELETE FROM _prisma_migrations WHERE migration_name = '20251117115414_first';\" || true && npx prisma migrate deploy && node dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate resolve --applied 20251117115414_first || npx prisma migrate resolve --rolled-back 20251117115414_first || true && npx prisma migrate deploy && node dist/index.js"]
