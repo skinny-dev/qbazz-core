@@ -105,6 +105,8 @@ app.use(error_middleware_1.errorHandler);
 const PORT = Number(process.env.PORT) || 3000;
 // Test database connection on startup
 const database_1 = __importDefault(require("./config/database"));
+// Store server reference for graceful shutdown
+let server;
 // Start server first, then test database
 server = app.listen(PORT, '0.0.0.0', () => {
     console.log('='.repeat(60));
@@ -140,8 +142,6 @@ server = app.listen(PORT, '0.0.0.0', () => {
     console.log('  - GET    /api/products');
     console.log('='.repeat(60));
 });
-// Store server reference for graceful shutdown
-let server;
 // Graceful shutdown
 const gracefulShutdown = async (signal) => {
     console.log(`🛑 ${signal} received, shutting down gracefully...`);
