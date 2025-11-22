@@ -60,11 +60,14 @@ app.use('/api/', rateLimiter);
 
 // ==================== HEALTH CHECK ====================
 
-app.get('/health', (_req, res) => {
+app.get('/health', (req, res) => {
+  console.log(`🏥 Health check requested from: ${req.ip || req.connection.remoteAddress}`);
   res.json({
     success: true,
     message: 'Qbazz Core API is running',
     timestamp: new Date().toISOString(),
+    port: process.env.PORT || 3000,
+    env: process.env.NODE_ENV || 'development',
   });
 });
 
