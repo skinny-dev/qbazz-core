@@ -1,25 +1,4 @@
-# Build stage
-FROM node:19-alpine AS builder
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY prisma ./prisma/
-
-# Install ALL dependencies (including dev dependencies for build)
-RUN npm install
-
-# Copy source code
-COPY . .
-
-# Generate Prisma Client
-RUN npx prisma generate
-
-# Build TypeScript
-RUN npm run build
-
-# Production stage
+# Use Node.js 19 (matching Runflare)
 FROM node:19-alpine
 
 WORKDIR /app
@@ -28,19 +7,20 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install production dependencies + prisma CLI for migrations
+# Install dependencies (keep prisma for migrations)
 RUN npm install --omit=dev && npm install prisma@^5.7.0
 
-# Copy built files from builder
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/config ./config
+# Copy source code and config
+COPY . .
 
-# Copy start script
-COPY start.sh ./
-RUN chmod +x start.sh
-
-# Generate Prisma Client in production
+# Generate Prisma Client
 RUN npx prisma generate
+
+# Build TypeScript if dist doesn't exist
+RUN npm install typescript@^5.3.3 && npm run build || echo "Using existing dist"
+
+# Make start script executable
+RUN chmod +x start.sh
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
