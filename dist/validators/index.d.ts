@@ -18,8 +18,8 @@ export declare function validatePhoneNumber(phone: string): boolean;
 export declare function validateSlug(slug: string): boolean;
 export declare const createStoreSchema: z.ZodObject<{
     title: z.ZodString;
-    description: z.ZodOptional<z.ZodString>;
-    longDescription: z.ZodOptional<z.ZodString>;
+    description: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    longDescription: z.ZodNullable<z.ZodOptional<z.ZodString>>;
     socials: z.ZodObject<{
         telegram: z.ZodObject<{
             id: z.ZodEffects<z.ZodString, string, string>;
@@ -149,8 +149,8 @@ export declare const createStoreSchema: z.ZodObject<{
         phones?: string[] | undefined;
     };
     categoryIds: number[];
-    description?: string | undefined;
-    longDescription?: string | undefined;
+    description?: string | null | undefined;
+    longDescription?: string | null | undefined;
     avatar?: string | undefined;
     coverImage?: string | undefined;
     tags?: string[] | undefined;
@@ -181,16 +181,16 @@ export declare const createStoreSchema: z.ZodObject<{
         phones?: string[] | undefined;
     };
     categoryIds: number[];
-    description?: string | undefined;
-    longDescription?: string | undefined;
+    description?: string | null | undefined;
+    longDescription?: string | null | undefined;
     avatar?: string | undefined;
     coverImage?: string | undefined;
     tags?: string[] | undefined;
 }>;
 export declare const updateStoreSchema: z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
-    description: z.ZodOptional<z.ZodOptional<z.ZodString>>;
-    longDescription: z.ZodOptional<z.ZodOptional<z.ZodString>>;
+    description: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
+    longDescription: z.ZodOptional<z.ZodNullable<z.ZodOptional<z.ZodString>>>;
     socials: z.ZodOptional<z.ZodObject<{
         telegram: z.ZodObject<{
             id: z.ZodEffects<z.ZodString, string, string>;
@@ -295,8 +295,8 @@ export declare const updateStoreSchema: z.ZodObject<{
     categoryIds: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
 }, "strip", z.ZodTypeAny, {
     title?: string | undefined;
-    description?: string | undefined;
-    longDescription?: string | undefined;
+    description?: string | null | undefined;
+    longDescription?: string | null | undefined;
     socials?: {
         telegram: {
             id: string;
@@ -327,8 +327,8 @@ export declare const updateStoreSchema: z.ZodObject<{
     categoryIds?: number[] | undefined;
 }, {
     title?: string | undefined;
-    description?: string | undefined;
-    longDescription?: string | undefined;
+    description?: string | null | undefined;
+    longDescription?: string | null | undefined;
     socials?: {
         telegram: {
             id: string;

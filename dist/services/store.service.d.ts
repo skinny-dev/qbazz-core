@@ -17,7 +17,7 @@ export declare class StoreService {
             createdAt: Date;
             updatedAt: Date;
         };
-        storeCategories: ({
+        categories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -178,7 +178,7 @@ export declare class StoreService {
             createdAt: Date;
             updatedAt: Date;
         };
-        storeCategories: ({
+        categories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -275,7 +275,7 @@ export declare class StoreService {
             firstName: string | null;
             lastName: string | null;
         };
-        storeCategories: ({
+        categories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -377,7 +377,7 @@ export declare class StoreService {
             firstName: string | null;
             lastName: string | null;
         };
-        storeCategories: ({
+        categories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -484,7 +484,7 @@ export declare class StoreService {
                 telegramId: string;
                 telegramUsername: string | null;
             };
-            storeCategories: ({
+            categories: ({
                 category: {
                     title: string;
                     description: string | null;
@@ -556,7 +556,7 @@ export declare class StoreService {
                 telegramId: string;
                 telegramUsername: string | null;
             };
-            storeCategories: ({
+            categories: ({
                 category: {
                     title: string;
                     description: string | null;

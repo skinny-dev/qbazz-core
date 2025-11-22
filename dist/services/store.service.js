@@ -76,7 +76,7 @@ class StoreService {
                     showContact: true,
                     languages: ['fa'],
                 }),
-                storeCategories: {
+                categories: {
                     create: data.categoryIds.map((categoryId, index) => ({
                         categoryId,
                         isPrimary: index === 0,
@@ -85,7 +85,7 @@ class StoreService {
             },
             include: {
                 user: true,
-                storeCategories: {
+                categories: {
                     include: {
                         category: true,
                     },
@@ -222,7 +222,7 @@ class StoreService {
             data: updateData,
             include: {
                 user: true,
-                storeCategories: {
+                categories: {
                     include: {
                         category: true,
                     },
@@ -288,7 +288,7 @@ class StoreService {
                         lastName: true,
                     },
                 },
-                storeCategories: {
+                categories: {
                     include: {
                         category: true,
                     },
@@ -331,7 +331,7 @@ class StoreService {
                         lastName: true,
                     },
                 },
-                storeCategories: {
+                categories: {
                     include: {
                         category: true,
                     },
@@ -360,7 +360,7 @@ class StoreService {
             where.isApproved = params.isApproved;
         }
         if (params.categoryId) {
-            where.storeCategories = {
+            where.categories = {
                 some: {
                     categoryId: params.categoryId,
                 },
@@ -386,7 +386,7 @@ class StoreService {
                             telegramUsername: true,
                         },
                     },
-                    storeCategories: {
+                    categories: {
                         include: {
                             category: true,
                         },

@@ -40,13 +40,6 @@ export declare class CategoryService {
      * Delete category
      */
     deleteCategory(categoryId: number): Promise<{
-        storeCategories: {
-            id: number;
-            storeId: number;
-            categoryId: number;
-            createdAt: Date;
-            isPrimary: boolean;
-        }[];
         products: {
             title: string;
             description: string | null;
@@ -99,6 +92,13 @@ export declare class CategoryService {
             createdAt: Date;
             updatedAt: Date;
             sortOrder: number;
+        }[];
+        storeCategories: {
+            id: number;
+            storeId: number;
+            categoryId: number;
+            createdAt: Date;
+            isPrimary: boolean;
         }[];
     } & {
         title: string;

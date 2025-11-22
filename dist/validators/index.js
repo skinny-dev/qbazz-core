@@ -56,8 +56,8 @@ function validateSlug(slug) {
 // Store Creation Schema
 exports.createStoreSchema = zod_1.z.object({
     title: zod_1.z.string().min(3).max(255),
-    description: zod_1.z.string().min(10).max(1000).optional(),
-    longDescription: zod_1.z.string().max(5000).optional(),
+    description: zod_1.z.string().max(1000).optional().nullable(),
+    longDescription: zod_1.z.string().max(5000).optional().nullable(),
     socials: zod_1.z.object({
         telegram: zod_1.z.object({
             id: zod_1.z.string().refine(validateTelegramId, 'Invalid Telegram ID'),

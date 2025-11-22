@@ -24,7 +24,7 @@ class StoreController {
                 // Send store data back to Telegram bot
                 await telegram_service_1.default.sendStoreDataToBot(store);
                 // Notify admins for approval
-                const categories = store.storeCategories?.map((sc) => sc.category.title) || [];
+                const categories = store.categories?.map((sc) => sc.category.title) || [];
                 await telegram_service_1.default.notifyAdminsAboutNewStore({
                     id: store.id,
                     title: store.title,
