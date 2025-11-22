@@ -106,7 +106,7 @@ const PORT = Number(process.env.PORT) || 3000;
 // Test database connection on startup
 const database_1 = __importDefault(require("./config/database"));
 // Start server first, then test database
-app.listen(PORT, '0.0.0.0', () => {
+server = app.listen(PORT, '0.0.0.0', () => {
     console.log('='.repeat(60));
     console.log(`🚀 Qbazz Core API Server`);
     console.log('='.repeat(60));
@@ -140,17 +140,31 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log('  - GET    /api/products');
     console.log('='.repeat(60));
 });
+// Store server reference for graceful shutdown
+let server;
 // Graceful shutdown
-process.on('SIGINT', async () => {
-    console.log('🛑 SIGINT received, shutting down gracefully...');
-    await database_1.default.$disconnect();
-    process.exit(0);
-});
-process.on('SIGTERM', async () => {
-    console.log('🛑 SIGTERM received, shutting down gracefully...');
-    await database_1.default.$disconnect();
-    process.exit(0);
-});
+const gracefulShutdown = async (signal) => {
+    console.log(`🛑 ${signal} received, shutting down gracefully...`);
+    if (server) {
+        server.close(async () => {
+            console.log('✅ HTTP server closed');
+            await database_1.default.$disconnect();
+            console.log('✅ Database disconnected');
+            process.exit(0);
+        });
+        // Force close after 10 seconds
+        setTimeout(() => {
+            console.error('⚠️ Forcing shutdown after timeout');
+            process.exit(1);
+        }, 10000);
+    }
+    else {
+        await database_1.default.$disconnect();
+        process.exit(0);
+    }
+};
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 // Handle unhandled rejections
 process.on('unhandledRejection', (reason, promise) => {
     console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
