@@ -134,11 +134,8 @@ const PORT = Number(process.env.PORT) || 3000;
 // Test database connection on startup
 import prisma from './config/database';
 
-// Store server reference for graceful shutdown
-let server: any;
-
 // Start server first, then test database
-server = app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('='.repeat(60));
   console.log(`🚀 Qbazz Core API Server`);
   console.log('='.repeat(60));
