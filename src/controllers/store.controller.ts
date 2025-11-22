@@ -22,7 +22,7 @@ export class StoreController {
       await telegramService.sendStoreDataToBot(store);
 
       // Notify admins for approval
-      const categories = (store as any).storeCategories?.map((sc: any) => sc.category.title) || [];
+      const categories = (store as any).categories?.map((sc: any) => sc.category.title) || [];
       await telegramService.notifyAdminsAboutNewStore({
         id: store.id,
         title: store.title,

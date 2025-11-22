@@ -77,7 +77,7 @@ export class StoreService {
           showContact: true,
           languages: ['fa'],
         }),
-        storeCategories: {
+        categories: {
           create: data.categoryIds.map((categoryId, index) => ({
             categoryId,
             isPrimary: index === 0,
@@ -86,7 +86,7 @@ export class StoreService {
       },
       include: {
         user: true,
-        storeCategories: {
+        categories: {
           include: {
             category: true,
           },
@@ -236,7 +236,7 @@ export class StoreService {
       data: updateData,
       include: {
         user: true,
-        storeCategories: {
+        categories: {
           include: {
             category: true,
           },
@@ -311,7 +311,7 @@ export class StoreService {
             lastName: true,
           },
         },
-        storeCategories: {
+        categories: {
           include: {
             category: true,
           },
@@ -358,7 +358,7 @@ export class StoreService {
             lastName: true,
           },
         },
-        storeCategories: {
+        categories: {
           include: {
             category: true,
           },
@@ -399,7 +399,7 @@ export class StoreService {
     }
 
     if (params.categoryId) {
-      where.storeCategories = {
+      where.categories = {
         some: {
           categoryId: params.categoryId,
         },
@@ -427,7 +427,7 @@ export class StoreService {
               telegramUsername: true,
             },
           },
-          storeCategories: {
+          categories: {
             include: {
               category: true,
             },
