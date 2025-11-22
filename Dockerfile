@@ -29,19 +29,18 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install production dependencies + prisma CLI for migrations
-RUN npm install --production && npm install prisma@^5.7.0
+RUN npm install --omit=dev && npm install prisma@^5.7.0
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/config ./config
 
-# Copy migration files
-COPY --from=builder /app/prisma/migrations ./prisma/migrations
+# Copy start script
+COPY start.sh ./
+RUN chmod +x start.sh
 
 # Generate Prisma Client in production
 RUN npx prisma generate
-
-# Make start script executable
-RUN chmod +x start.sh
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \

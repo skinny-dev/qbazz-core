@@ -11,32 +11,15 @@ echo "================================"
 
 # Run database migrations (production)
 echo "Running database migrations..."
-npx prisma migrate deploy
+npx prisma migrate deploy || {
+  echo "WARNING: Migrations failed, attempting to continue..."
+}
 
 # Generate Prisma Client (ensure it's up to date)
 echo "Generating Prisma Client..."
-npx prisma generate
-
-# Seed categories if needed (non-blocking)
-echo "Seeding database (if needed)..."
-node -e "
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-(async () => {
-  try {
-    const count = await prisma.category.count();
-    if (count === 0) {
-      console.log('No categories found, run seed manually if needed');
-    } else {
-      console.log(\`Found \${count} categories, skipping seed\`);
-    }
-  } catch (e) {
-    console.log('Could not check categories:', e.message);
-  } finally {
-    await prisma.\$disconnect();
-  }
-})();
-" || true
+npx prisma generate || {
+  echo "WARNING: Prisma generate failed, using existing client..."
+}
 
 echo "================================"
 echo "Starting API server..."
