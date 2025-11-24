@@ -387,6 +387,7 @@ export class StoreService {
     categoryId?: number;
     isApproved?: boolean;
     search?: string;
+    userId?: string; // Telegram ID or user ID
   }) {
     const { skip, take, page, limit } = getPaginationParams(params.page, params.limit);
 
@@ -403,6 +404,16 @@ export class StoreService {
         some: {
           categoryId: params.categoryId,
         },
+      };
+    }
+
+    if (params.userId) {
+      // Support both telegramId (string) and userId (number)
+      where.user = {
+        OR: [
+          { telegramId: params.userId },
+          { id: isNaN(Number(params.userId)) ? undefined : Number(params.userId) },
+        ].filter(Boolean),
       };
     }
 

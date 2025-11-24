@@ -148,7 +148,7 @@ export class StoreController {
    * GET /api/stores
    */
   listStores = asyncHandler(async (req: Request, res: Response) => {
-    const { page, limit, categoryId, isApproved, search } = req.query;
+    const { page, limit, categoryId, isApproved, search, userId } = req.query;
 
     const result = await storeService.listStores({
       page: page ? parseInt(page as string) : undefined,
@@ -156,6 +156,7 @@ export class StoreController {
       categoryId: categoryId ? parseInt(categoryId as string) : undefined,
       isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
       search: search as string,
+      userId: userId as string,
     });
 
     return sendSuccess(res, result.stores, 'Stores retrieved successfully', 200, result.meta);
