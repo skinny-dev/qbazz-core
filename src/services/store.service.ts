@@ -400,7 +400,7 @@ export class StoreService {
     }
 
     if (params.categoryId) {
-      where.categories = {
+      where.storeCategories = {
         some: {
           categoryId: params.categoryId,
         },
@@ -438,7 +438,7 @@ export class StoreService {
               telegramUsername: true,
             },
           },
-          categories: {
+          storeCategories: {
             include: {
               category: true,
             },
