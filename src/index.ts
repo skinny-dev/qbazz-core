@@ -175,7 +175,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 // Graceful shutdown
 const gracefulShutdown = async (signal: string) => {
   console.log(`🛑 ${signal} received, shutting down gracefully...`);
-  
+
   if (server) {
     server.close(async () => {
       console.log('✅ HTTP server closed');
@@ -183,7 +183,7 @@ const gracefulShutdown = async (signal: string) => {
       console.log('✅ Database disconnected');
       process.exit(0);
     });
-    
+
     // Force close after 10 seconds
     setTimeout(() => {
       console.error('⚠️ Forcing shutdown after timeout');
