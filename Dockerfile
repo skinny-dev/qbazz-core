@@ -7,8 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install ALL dependencies (including dev dependencies for build)
-RUN npm install
+# Install dependencies including dev dependencies
+RUN npm ci
 
 # Copy source code and config
 COPY . .
@@ -22,8 +22,8 @@ RUN npm run build && ls -la dist/
 # Verify dist exists
 RUN test -f dist/index.js || (echo "ERROR: dist/index.js not found!" && exit 1)
 
-# Remove dev dependencies after build
-RUN npm prune --production
+# Remove dev dependencies after build to reduce image size
+RUN npm prune --omit=dev
 
 # Make start script executable
 RUN chmod +x start.sh
