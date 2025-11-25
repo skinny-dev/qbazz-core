@@ -13,11 +13,14 @@ RUN npm install --omit=dev && npm install prisma@^5.7.0
 # Copy source code and config
 COPY . .
 
+# Install TypeScript and build tools
+RUN npm install typescript@^5.3.3
+
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Build TypeScript if dist doesn't exist
-RUN npm install typescript@^5.3.3 && npm run build || echo "Using existing dist"
+# Build TypeScript (ensure clean build)
+RUN npm run build
 
 # Make start script executable
 RUN chmod +x start.sh
