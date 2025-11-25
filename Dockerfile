@@ -17,7 +17,10 @@ COPY . .
 RUN npx prisma generate
 
 # Build TypeScript
-RUN npm run build
+RUN npm run build && ls -la dist/
+
+# Verify dist exists
+RUN test -f dist/index.js || (echo "ERROR: dist/index.js not found!" && exit 1)
 
 # Remove dev dependencies after build
 RUN npm prune --production
