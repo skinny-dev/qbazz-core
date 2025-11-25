@@ -7,20 +7,20 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies (keep prisma for migrations)
-RUN npm install --omit=dev && npm install prisma@^5.7.0
+# Install ALL dependencies (including dev dependencies for build)
+RUN npm install
 
 # Copy source code and config
 COPY . .
 
-# Install TypeScript and build tools
-RUN npm install typescript@^5.3.3
-
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Build TypeScript (ensure clean build)
+# Build TypeScript
 RUN npm run build
+
+# Remove dev dependencies after build
+RUN npm prune --production
 
 # Make start script executable
 RUN chmod +x start.sh
