@@ -7,8 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install ALL dependencies (including devDependencies for build)
-# Add --no-optional to speed up and force cache bust
+# Install ALL dependencies (including devDependencies for TypeScript build)
+# Cache bust: 2025-11-26-01:15
 RUN npm ci --include=dev
 
 # Copy source code and config
