@@ -7,8 +7,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies including dev dependencies
-RUN npm ci
+# Install ALL dependencies (including devDependencies for build)
+# Add --no-optional to speed up and force cache bust
+RUN npm ci --include=dev
 
 # Copy source code and config
 COPY . .
