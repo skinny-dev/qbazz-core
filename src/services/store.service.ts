@@ -408,17 +408,21 @@ export class StoreService {
     }
 
     if (params.userId) {
-      // Support both telegramId (string) and numeric userId
-      const orConditions: any[] = [{ telegramId: params.userId }];
+      // First try to find user by telegramId or numeric id
+      const userQuery: any = { isActive: true };
       
-      // Add numeric id condition if userId is a valid number
       if (!isNaN(Number(params.userId))) {
-        orConditions.push({ id: Number(params.userId) });
+        // Could be either telegramId or id
+        userQuery.OR = [
+          { telegramId: params.userId },
+          { id: Number(params.userId) }
+        ];
+      } else {
+        // String telegramId only
+        userQuery.telegramId = params.userId;
       }
       
-      where.user = {
-        OR: orConditions,
-      };
+      where.user = userQuery;
     }
 
     if (params.search) {
