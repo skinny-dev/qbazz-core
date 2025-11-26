@@ -17,7 +17,7 @@ export declare class StoreService {
             createdAt: Date;
             updatedAt: Date;
         };
-        categories: ({
+        storeCategories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -178,7 +178,7 @@ export declare class StoreService {
             createdAt: Date;
             updatedAt: Date;
         };
-        categories: ({
+        storeCategories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -275,7 +275,7 @@ export declare class StoreService {
             firstName: string | null;
             lastName: string | null;
         };
-        categories: ({
+        storeCategories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -377,7 +377,7 @@ export declare class StoreService {
             firstName: string | null;
             lastName: string | null;
         };
-        categories: ({
+        storeCategories: ({
             category: {
                 title: string;
                 description: string | null;
@@ -477,6 +477,7 @@ export declare class StoreService {
         categoryId?: number;
         isApproved?: boolean;
         search?: string;
+        userId?: string;
     }): Promise<{
         stores: ({
             user: {
@@ -484,7 +485,7 @@ export declare class StoreService {
                 telegramId: string;
                 telegramUsername: string | null;
             };
-            categories: ({
+            storeCategories: ({
                 category: {
                     title: string;
                     description: string | null;
@@ -556,7 +557,7 @@ export declare class StoreService {
                 telegramId: string;
                 telegramUsername: string | null;
             };
-            categories: ({
+            storeCategories: ({
                 category: {
                     title: string;
                     description: string | null;

@@ -33,7 +33,7 @@ class UserService {
             include: {
                 stores: {
                     include: {
-                        categories: {
+                        storeCategories: {
                             include: {
                                 category: true,
                             },
@@ -56,7 +56,7 @@ class UserService {
             include: {
                 stores: {
                     include: {
-                        categories: {
+                        storeCategories: {
                             include: {
                                 category: true,
                             },

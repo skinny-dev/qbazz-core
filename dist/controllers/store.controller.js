@@ -130,13 +130,14 @@ class StoreController {
          * GET /api/stores
          */
         this.listStores = (0, error_middleware_1.asyncHandler)(async (req, res) => {
-            const { page, limit, categoryId, isApproved, search } = req.query;
+            const { page, limit, categoryId, isApproved, search, userId } = req.query;
             const result = await store_service_1.default.listStores({
                 page: page ? parseInt(page) : undefined,
                 limit: limit ? parseInt(limit) : undefined,
                 categoryId: categoryId ? parseInt(categoryId) : undefined,
                 isApproved: isApproved === 'true' ? true : isApproved === 'false' ? false : undefined,
                 search: search,
+                userId: userId,
             });
             return (0, response_util_1.sendSuccess)(res, result.stores, 'Stores retrieved successfully', 200, result.meta);
         });

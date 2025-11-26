@@ -76,7 +76,7 @@ class StoreService {
                     showContact: true,
                     languages: ['fa'],
                 }),
-                categories: {
+                storeCategories: {
                     create: data.categoryIds.map((categoryId, index) => ({
                         categoryId,
                         isPrimary: index === 0,
@@ -85,7 +85,7 @@ class StoreService {
             },
             include: {
                 user: true,
-                categories: {
+                storeCategories: {
                     include: {
                         category: true,
                     },
@@ -222,7 +222,7 @@ class StoreService {
             data: updateData,
             include: {
                 user: true,
-                categories: {
+                storeCategories: {
                     include: {
                         category: true,
                     },
@@ -288,7 +288,7 @@ class StoreService {
                         lastName: true,
                     },
                 },
-                categories: {
+                storeCategories: {
                     include: {
                         category: true,
                     },
@@ -331,7 +331,7 @@ class StoreService {
                         lastName: true,
                     },
                 },
-                categories: {
+                storeCategories: {
                     include: {
                         category: true,
                     },
@@ -360,10 +360,19 @@ class StoreService {
             where.isApproved = params.isApproved;
         }
         if (params.categoryId) {
-            where.categories = {
+            where.storeCategories = {
                 some: {
                     categoryId: params.categoryId,
                 },
+            };
+        }
+        if (params.userId) {
+            // Support both telegramId (string) and userId (number)
+            where.user = {
+                OR: [
+                    { telegramId: params.userId },
+                    { id: isNaN(Number(params.userId)) ? undefined : Number(params.userId) },
+                ].filter(Boolean),
             };
         }
         if (params.search) {
@@ -386,7 +395,7 @@ class StoreService {
                             telegramUsername: true,
                         },
                     },
-                    categories: {
+                    storeCategories: {
                         include: {
                             category: true,
                         },

@@ -77,7 +77,7 @@ export class StoreService {
           showContact: true,
           languages: ['fa'],
         }),
-        categories: {
+        storeCategories: {
           create: data.categoryIds.map((categoryId, index) => ({
             categoryId,
             isPrimary: index === 0,
@@ -86,7 +86,7 @@ export class StoreService {
       },
       include: {
         user: true,
-        categories: {
+        storeCategories: {
           include: {
             category: true,
           },
@@ -236,7 +236,7 @@ export class StoreService {
       data: updateData,
       include: {
         user: true,
-        categories: {
+        storeCategories: {
           include: {
             category: true,
           },
@@ -311,7 +311,7 @@ export class StoreService {
             lastName: true,
           },
         },
-        categories: {
+        storeCategories: {
           include: {
             category: true,
           },
@@ -358,7 +358,7 @@ export class StoreService {
             lastName: true,
           },
         },
-        categories: {
+        storeCategories: {
           include: {
             category: true,
           },

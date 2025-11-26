@@ -29,7 +29,7 @@ exports.strictRateLimiter = (0, express_rate_limit_1.default)({
  */
 const antiScraping = (req, res, next) => {
     const userAgent = req.get('User-Agent') || '';
-    // Block common scraping bots
+    // Block common scraping bots (but allow our telegram bot)
     const blockedBots = [
         'scrapy',
         'selenium',
@@ -38,7 +38,6 @@ const antiScraping = (req, res, next) => {
         'wget',
         'python-requests',
         'axios',
-        'httpx',
     ];
     const isBot = blockedBots.some((bot) => userAgent.toLowerCase().includes(bot));
     if (isBot) {

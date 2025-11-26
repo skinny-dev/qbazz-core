@@ -21,7 +21,7 @@ export declare class UserService {
      */
     getUserById(userId: number): Promise<{
         stores: ({
-            categories: ({
+            storeCategories: ({
                 category: {
                     title: string;
                     description: string | null;
@@ -92,7 +92,7 @@ export declare class UserService {
      */
     getUserByTelegramId(telegramId: string): Promise<{
         stores: ({
-            categories: ({
+            storeCategories: ({
                 category: {
                     title: string;
                     description: string | null;

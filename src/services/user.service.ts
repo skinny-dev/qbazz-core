@@ -31,7 +31,7 @@ export class UserService {
       include: {
         stores: {
           include: {
-            categories: {
+            storeCategories: {
               include: {
                 category: true,
               },
@@ -57,7 +57,7 @@ export class UserService {
       include: {
         stores: {
           include: {
-            categories: {
+            storeCategories: {
               include: {
                 category: true,
               },
