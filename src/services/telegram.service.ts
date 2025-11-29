@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const TELEGRAM_BOT_URL = process.env.TELEGRAM_BOT_URL || 'http://localhost:3001';
+let TELEGRAM_BOT_URL = process.env.TELEGRAM_BOT_URL || 'http://localhost:3001';
+
+// Ensure TELEGRAM_BOT_URL has a valid scheme; default to https if missing
+if (!TELEGRAM_BOT_URL.match(/^https?:\/\//i)) {
+  TELEGRAM_BOT_URL = 'https://' + TELEGRAM_BOT_URL;
+}
 
 export class TelegramService {
   /**

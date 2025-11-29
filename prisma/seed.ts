@@ -550,6 +550,79 @@ async function main() {
     },
   });
 
+  // Ensure default fallback categories exist (user-requested)
+  console.log('Ensuring default fallback categories...');
+
+  await prisma.category.upsert({
+    where: { slug: 'lebass-zanane' },
+    update: { title: 'لباس زنانه', isActive: true },
+    create: {
+      title: 'لباس زنانه',
+      slug: 'lebass-zanane',
+      icon: '👗',
+      description: 'دسته‌بندی پوشاک زنانه (پیش‌فرض)',
+      metaKeywords: JSON.stringify(['لباس زنانه', 'پوشاک زنانه']),
+      isActive: true,
+      sortOrder: 10,
+    },
+  });
+
+  await prisma.category.upsert({
+    where: { slug: 'lebass-mardane' },
+    update: { title: 'لباس مردانه', isActive: true },
+    create: {
+      title: 'لباس مردانه',
+      slug: 'lebass-mardane',
+      icon: '👔',
+      description: 'دسته‌بندی پوشاک مردانه (پیش‌فرض)',
+      metaKeywords: JSON.stringify(['لباس مردانه', 'پوشاک مردانه']),
+      isActive: true,
+      sortOrder: 11,
+    },
+  });
+
+  await prisma.category.upsert({
+    where: { slug: 'lebass-bache-gane' },
+    update: { title: 'لباس بچگانه', isActive: true },
+    create: {
+      title: 'لباس بچگانه',
+      slug: 'lebass-bache-gane',
+      icon: '👶',
+      description: 'دسته‌بندی پوشاک بچگانه (پیش‌فرض)',
+      metaKeywords: JSON.stringify(['لباس بچگانه', 'پوشاک کودک']),
+      isActive: true,
+      sortOrder: 12,
+    },
+  });
+
+  await prisma.category.upsert({
+    where: { slug: 'bags-shoes' },
+    update: { title: 'کیف و کفش', isActive: true },
+    create: {
+      title: 'کیف و کفش',
+      slug: 'bags-shoes',
+      icon: '👜',
+      description: 'کیف، کفش و لوازم جانبی',
+      metaKeywords: JSON.stringify(['کیف', 'کفش', 'اکسسوری']),
+      isActive: true,
+      sortOrder: 13,
+    },
+  });
+
+  await prisma.category.upsert({
+    where: { slug: 'misc' },
+    update: { title: 'متفرقه', isActive: true },
+    create: {
+      title: 'متفرقه',
+      slug: 'misc',
+      icon: '📦',
+      description: 'دسته‌بندی متفرقه - پیش‌فرض زمانی که دسته‌بندی شناسایی نشده',
+      metaKeywords: JSON.stringify(['متفرقه', 'سایر']),
+      isActive: true,
+      sortOrder: 999,
+    },
+  });
+
   console.log('✅ Database seeded successfully!');
   console.log(`
 📊 Created:

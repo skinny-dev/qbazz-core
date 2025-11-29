@@ -20,7 +20,7 @@
 ✅ **Anti-Scraping** - Rate limiting and bot detection  
 ✅ **Comprehensive API** - RESTful endpoints with pagination and filtering
 
-## Tech Stack
++## Tech Stack
 
 - **Runtime**: Node.js with TypeScript
 - **Framework**: Express.js

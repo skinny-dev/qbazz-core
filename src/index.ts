@@ -22,6 +22,7 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import storeController from './controllers/store.controller';
 import productController from './controllers/product.controller';
 import categoryController from './controllers/category.controller';
+import adminController from './controllers/admin.controller';
 import userController from './controllers/user.controller';
 
 // Create Express app
@@ -103,6 +104,9 @@ router.put('/stores/:id', isAuthenticated, storeController.updateStore);
 router.delete('/stores/:id', isAuthenticated, storeController.deleteStore);
 router.post('/stores/:id/approve', isAdmin, storeController.approveStore);
 router.post('/stores/:id/reject', isAdmin, storeController.rejectStore);
+
+// ===== ADMIN ROUTES (one-off protected actions) =====
+router.post('/admin/ensure-default-categories', adminController.ensureDefaultCategories);
 
 // ===== PRODUCT ROUTES =====
 router.get('/products', antiScraping, productController.listProducts);
